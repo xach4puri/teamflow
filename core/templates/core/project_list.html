@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>All Projects <span class="badge bg-secondary">{{ total_count }}</span></h1>
+        <a href="{% url 'core:project_create' %}" class="btn btn-primary">+ New Project</a>
+    </div>
+    {% if projects %}
+    <div class="row g-3">
+        {% for project in projects %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card feature-card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'core:project_detail' project.pk %}" class="text-decoration-none">{{ project.name }}</a>
+                    </h5>
+                    <p class="text-muted small">Owner: <strong>{{ project.owner.username }}</strong></p>
+                    {% if project.description %}<p class="card-text">{{ project.description|truncatewords:20 }}</p>{% endif %}
+                </div>
+                <div class="card-footer d-flex gap-2">
+                    <a href="{% url 'core:project_edit' project.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a href="{% url 'core:project_delete' project.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">No projects yet. <a href="{% url 'core:project_create' %}">Create one!</a></div>
+    {% endif %}
+</div>
+{% endblock %}

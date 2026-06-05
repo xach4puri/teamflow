@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Welcome back, {{ user.username }}!</h1>
+        <a href="{% url 'core:project_create' %}" class="btn btn-primary">+ New Project</a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="fs-2 fw-bold text-primary">{{ user_projects_count }}</div>
+                <div class="text-muted">My Projects</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="fs-2 fw-bold text-secondary">{{ todo_tasks }}</div>
+                <div class="text-muted">To Do</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="fs-2 fw-bold text-warning">{{ in_progress_tasks }}</div>
+                <div class="text-muted">In Progress</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="fs-2 fw-bold text-success">{{ done_tasks }}</div>
+                <div class="text-muted">Done</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- My Projects -->
+        <div class="col-md-6">
+            <h2 class="mb-3">My Projects <span class="badge bg-secondary">{{ user_projects_count }}</span></h2>
+            {% if user_projects %}
+            <div class="list-group">
+                {% for project in user_projects %}
+                <a href="{% url 'core:project_detail' project.pk %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ project.name }}</strong>
+                        <span class="badge bg-secondary">{{ project.tasks.count }} task{{ project.tasks.count|pluralize }}</span>
+                    </div>
+                    {% if project.description %}<small class="text-muted">{{ project.description|truncatewords:10 }}</small>{% endif %}
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-light border">No projects yet. <a href="{% url 'core:project_create' %}">Create one!</a></div>
+            {% endif %}
+        </div>
+
+        <!-- Assigned Tasks -->
+        <div class="col-md-6">
+            <h2 class="mb-3">Tasks Assigned to Me <span class="badge bg-secondary">{{ assigned_tasks_count }}</span></h2>
+            {% if assigned_tasks %}
+            <div class="list-group">
+                {% for task in assigned_tasks %}
+                <a href="{% url 'core:task_detail' task.pk %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="fw-semibold">{{ task.title }}</div>
+                            <small class="text-muted">{{ task.project.name }}</small>
+                        </div>
+                        <div>
+                            <span class="badge {% if task.status == 'todo' %}bg-secondary{% elif task.status == 'in_progress' %}bg-primary{% else %}bg-success{% endif %}">
+                                {{ task.get_status_display }}
+                            </span>
+                            <span class="badge {% if task.priority == 'high' %}bg-danger{% elif task.priority == 'medium' %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-light border">No tasks assigned to you yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

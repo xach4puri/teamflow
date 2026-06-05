@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Delete {{ project.name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="mb-0">Confirm Deletion</h2>
+                </div>
+                <div class="card-body">
+                    <p class="fs-5">Are you sure you want to delete the project:</p>
+                    <p class="fw-bold fs-4">"{{ project.name }}"?</p>
+                    <p class="text-danger">
+                        <strong>Warning:</strong> This will permanently delete the project
+                        and ALL {{ project.tasks.count }} task(s) associated with it.
+                        This action cannot be undone.
+                    </p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger">Yes, Delete Project</button>
+                            <a href="{% url 'core:project_detail' project.pk %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'core:project_list' %}">Projects</a></li>
+            <li class="breadcrumb-item active">{{ project.name }}</li>
+        </ol>
+    </nav>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>{{ project.name }}</h1>
+                    {% if project.description %}<p>{{ project.description }}</p>{% endif %}
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'core:project_edit' project.pk %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                    <a href="{% url 'core:project_delete' project.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                </div>
+            </div>
+            <div class="row text-center mt-3 g-2">
+                <div class="col-3"><div class="stat-card"><div class="fw-bold fs-4">{{ task_count }}</div><div class="text-muted small">Total</div></div></div>
+                <div class="col-3"><div class="stat-card"><div class="fw-bold fs-4 text-secondary">{{ todo_count }}</div><div class="text-muted small">To Do</div></div></div>
+                <div class="col-3"><div class="stat-card"><div class="fw-bold fs-4 text-primary">{{ in_progress_count }}</div><div class="text-muted small">In Progress</div></div></div>
+                <div class="col-3"><div class="stat-card"><div class="fw-bold fs-4 text-success">{{ done_count }}</div><div class="text-muted small">Done</div></div></div>
+            </div>
+        </div>
+        <div class="card-footer text-muted small">Owner: {{ project.owner.username }} &middot; Updated: {{ project.updated_at|date:"M d, Y" }}</div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Tasks <span class="badge bg-secondary">{{ task_count }}</span></h2>
+        <a href="{% url 'core:task_create' project.pk %}" class="btn btn-success btn-sm">+ Add Task</a>
+    </div>
+    {% if tasks %}
+    <div class="list-group">
+        {% for task in tasks %}
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="mb-1"><a href="{% url 'core:task_detail' task.pk %}" class="text-decoration-none">{{ task.title }}</a></h6>
+                    <small class="text-muted">{% if task.assigned_to %}Assigned to: {{ task.assigned_to.username }}{% else %}Unassigned{% endif %}</small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge {% if task.status == 'todo' %}bg-secondary{% elif task.status == 'in_progress' %}bg-primary{% else %}bg-success{% endif %}">{{ task.get_status_display }}</span>
+                    <span class="badge {% if task.priority == 'high' %}bg-danger{% elif task.priority == 'medium' %}bg-warning text-dark{% else %}bg-success{% endif %}">{{ task.get_priority_display }}</span>
+                    <a href="{% url 'core:task_edit' task.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <a href="{% url 'core:task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">No tasks yet. <a href="{% url 'core:task_create' project.pk %}">Add the first task!</a></div>
+    {% endif %}
+</div>
+{% endblock %}

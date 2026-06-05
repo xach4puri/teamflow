@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-3">{{ title }}</h1>
+        <p class="lead fs-4 mb-4">{{ tagline }}</p>
+        <p class="fs-5 opacity-75 mb-4">
+            Organize your team, manage projects, and track tasks — all in one place.
+        </p>
+        <a href="{% url 'core:project_list' %}" class="btn btn-light btn-lg">
+            View All Projects
+        </a>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row text-center g-3">
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="fs-1 fw-bold text-primary">{{ project_count }}</div>
+                    <div class="text-muted">Active Projects</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="fs-1 fw-bold text-success">{{ task_count }}</div>
+                    <div class="text-muted">Total Tasks</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">What you can do with TeamFlow</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card h-100 p-4 text-center">
+                    <h5 class="fw-bold mb-3">Manage Projects</h5>
+                    <p class="text-muted">Create and organize your team projects in one place. Keep everything structured.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100 p-4 text-center">
+                    <h5 class="fw-bold mb-3">Track Tasks</h5>
+                    <p class="text-muted">Create tasks with priorities and deadlines. Track progress from "To Do" to "Done".</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100 p-4 text-center">
+                    <h5 class="fw-bold mb-3">Team Collaboration</h5>
+                    <p class="text-muted">Assign tasks to team members and monitor who is working on what.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
